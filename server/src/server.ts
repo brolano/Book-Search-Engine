@@ -26,32 +26,35 @@ const server = new ApolloServer({
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Apply Apollo Server middleware
-app.use(
-  '/graphql',
-  cors<cors.CorsRequest>(), // Enable CORS
-  expressMiddleware(server, {
-    context: async ({ req }) => {
-      // Extract token from Authorization header and pass to context
-      const token = req.headers.authorization?.split(' ')[1];
-      return { token };
-    },
-  })
-);
-
-// Serve static assets in production
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../client/build')));
-
-  // Serve index.html for all routes in production
-  app.get('*', (_req, res) => {
-    res.sendFile(path.join(__dirname, '../client/build/index.html'));
-  });
-}
-
 // Initialize the database and start Apollo Server
 db.once('open', async () => {
+  // Ensure the server is started before using expressMiddleware
   await server.start();
+
+  // Apply Apollo Server middleware
+  app.use(
+    '/graphql',
+    cors<cors.CorsRequest>(), // Enable CORS
+    expressMiddleware(server, {
+      context: async ({ req }) => {
+        // Extract token from Authorization header and pass to context
+        const token = req.headers.authorization?.split(' ')[1];
+        return { token };
+      },
+    })
+  );
+
+  // Serve static assets in production
+  if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, '../client/build')));
+
+    // Serve index.html for all routes in production
+    app.get('*', (_req, res) => {
+      res.sendFile(path.join(__dirname, '../client/build/index.html'));
+    });
+  }
+
+  // Start the HTTP server after middleware is applied
   httpServer.listen(PORT, () => {
     console.log(`🚀 Server ready at http://localhost:${PORT}`);
     console.log(`🎯 GraphQL endpoint: http://localhost:${PORT}/graphql`);
