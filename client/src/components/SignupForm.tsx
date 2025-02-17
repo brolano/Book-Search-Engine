@@ -68,7 +68,7 @@ const SignupForm = ({ handleModalClose }: { handleModalClose: () => void }) => {
             placeholder="Your username"
             name="username"
             onChange={handleInputChange}
-            value={userFormData.username}
+            value={userFormData.username || ''}
             required
           />
           <Form.Control.Feedback type="invalid">Username is required!</Form.Control.Feedback>
@@ -81,7 +81,7 @@ const SignupForm = ({ handleModalClose }: { handleModalClose: () => void }) => {
             placeholder="Your email address"
             name="email"
             onChange={handleInputChange}
-            value={userFormData.email}
+            value={userFormData.email || ''}
             required
           />
           <Form.Control.Feedback type="invalid">Email is required!</Form.Control.Feedback>
@@ -94,7 +94,7 @@ const SignupForm = ({ handleModalClose }: { handleModalClose: () => void }) => {
             placeholder="Your password"
             name="password"
             onChange={handleInputChange}
-            value={userFormData.password}
+            value={userFormData.password || ''}
             required
           />
           <Form.Control.Feedback type="invalid">Password is required!</Form.Control.Feedback>

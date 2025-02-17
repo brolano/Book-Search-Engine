@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 import {
@@ -29,6 +29,11 @@ const SearchBooks = () => {
 
   // Apollo Hooks
   const { data: userData } = useQuery(QUERY_PROFILES);
+  useEffect(() => {
+    if (userData?.me?.savedBooks) {
+      setSavedBookIds(userData.me.savedBooks.map((book: any) => book.bookId));
+    }
+  }, [userData]);
   const [saveBook] = useMutation(SAVE_BOOK);
   const [removeBook] = useMutation(REMOVE_BOOK);
 
@@ -77,7 +82,7 @@ const SearchBooks = () => {
   const handleDeleteBook = async (bookId: string) => {
     try {
       await removeBook({ variables: { bookId } });
-      setSavedBookIds(savedBookIds.filter((id) => id !== bookId));
+      setSavedBookIds(savedBookIds.filter((id: string) => id !== bookId));
       removeBookId(bookId);
     } catch (err) {
       console.error(err);
