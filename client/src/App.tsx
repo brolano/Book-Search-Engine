@@ -6,7 +6,7 @@ import Navbar from './components/Navbar';
 
 // Create Apollo Client instance
 const client = new ApolloClient({
-  uri: '/graphql', // Adjust this if your GraphQL endpoint is different
+  uri: 'http://localhost:3001/graphql', // Adjust this if your GraphQL endpoint is different
   cache: new InMemoryCache(),
 });
 
