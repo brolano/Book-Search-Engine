@@ -1,13 +1,24 @@
 import './App.css';
 import { Outlet } from 'react-router-dom';
-import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
-
+import { ApolloClient, ApolloProvider, InMemoryCache, createHttpLink } from '@apollo/client';
 import Navbar from './components/Navbar';
 
-// Create Apollo Client instance
+const httpLink = createHttpLink({
+  uri: 'http://localhost:3001/graphql',
+  credentials: 'include'
+});
+
 const client = new ApolloClient({
-  uri: 'http://localhost:3001/graphql', // Adjust this if your GraphQL endpoint is different
+  link: httpLink,
   cache: new InMemoryCache(),
+  defaultOptions: {
+    mutate: {
+      errorPolicy: 'all'
+    },
+    query: {
+      errorPolicy: 'all'
+    }
+  }
 });
 
 function App() {
